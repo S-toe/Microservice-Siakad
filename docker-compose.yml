@@ -1,0 +1,179 @@
+version: '3.4'
+
+x-environment: &localvar
+  HOST_IP: "192.168.4.134"
+  DB_USERNAME: "siakad"
+  DB_PASSWORD: "password"
+
+services:
+  sso:
+    build:
+      args:
+        user: sevima
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: siakad
+    ports:
+      - 9001:9000
+    container_name: sso
+    environment: 
+      <<: *localvar
+      DB_DATABASE: "siakad_sso"
+      SERVICES_NAME: "SSO"
+    working_dir: /var/www/sso
+    volumes:
+      - ./sso:/var/www/sso
+      - ./.env.prod:/var/www/sso/.env
+    networks:
+      - siakad-cloud
+  
+  auth:
+    image: siakad
+    ports:
+      - 9002:9000
+    # image: siakad-auth
+    container_name: auth
+    environment: 
+      <<: *localvar
+      DB_DATABASE: "siakad_auth"
+      SERVICES_NAME: "AUTH"
+    working_dir: /var/www/auth
+    volumes:
+      - ./auth:/var/www/auth
+      - ./.env.prod:/var/www/auth/.env
+    networks:
+      - siakad-cloud
+  
+  master:
+    image: siakad
+    ports:
+      - 9003:9000
+    # image: siakad-master
+    container_name: master
+    environment: 
+      <<: *localvar
+      DB_DATABASE: "siakad_master"
+      SERVICES_NAME: "MASTER"
+    working_dir: /var/www/master
+    volumes:
+      - ./master:/var/www/master
+      - ./.env.prod:/var/www/master/.env
+    networks:
+      - siakad-cloud
+
+  mk:
+    image: siakad
+    ports:
+      - 9004:9000
+    # image: siakad-mk
+    container_name: mk
+    environment: 
+      <<: *localvar
+      DB_DATABASE: "siakad_mk"
+      SERVICES_NAME: "MK"
+    working_dir: /var/www/mk
+    volumes:
+      - ./mk:/var/www/mk
+      - ./.env.prod:/var/www/mk/.env
+    networks:
+      - siakad-cloud
+  
+  kuliah:
+    image: siakad
+    ports:
+      - 9005:9000
+    # image: siakad-kuliah
+    container_name: kuliah
+    environment: 
+      <<: *localvar
+      DB_DATABASE: "siakad_kuliah"
+      SERVICES_NAME: "KULIAH"
+    working_dir: /var/www/kuliah
+    volumes:
+      - ./kuliah:/var/www/kuliah
+      - ./.env.prod:/var/www/kuliah/.env
+    networks:
+      - siakad-cloud
+
+  perkuliahan:
+    image: siakad
+    ports:
+      - 9006:9000
+    # image: siakad-perkuliahan
+    container_name: perkuliahan
+    environment: 
+      <<: *localvar
+      DB_DATABASE: "siakad_perkuliahan"
+      SERVICES_NAME: "PERKULIAHAN"
+    working_dir: /var/www/perkuliahan
+    volumes:
+      - ./perkuliahan:/var/www/perkuliahan
+      - ./.env.prod:/var/www/perkuliahan/.env
+    networks:
+      - siakad-cloud
+
+  nilai:
+    image: siakad
+    ports:
+      - 9007:9000
+    # image: siakad-nilai
+    container_name: nilai
+    environment: 
+      <<: *localvar
+      DB_DATABASE: "siakad_nilai"
+      SERVICES_NAME: "NILAI"
+    working_dir: /var/www/nilai
+    volumes:
+      - ./nilai:/var/www/nilai
+      - ./.env.prod:/var/www/nilai/.env
+    networks:
+      - siakad-cloud
+
+  file:
+    image: siakad
+    ports:
+      - 9008:9000
+    # image: siakad-file
+    container_name: file
+    environment: 
+      <<: *localvar
+      DB_DATABASE: "siakad_file"
+      SERVICES_NAME: "FILE"
+    working_dir: /var/www/file
+    volumes:
+      - ./file:/var/www/file
+      - ./.env.prod:/var/www/file/.env
+    networks:
+      - siakad-cloud
+
+  nginx:
+    image: nginx
+    container_name: mk-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:8001
+      - 8001:8002
+      - 8002:8003
+      - 8003:8004
+      - 8004:8005
+      - 8005:8006
+      - 8006:8007
+      - 8007:8008
+    volumes:
+      - ./sso:/var/www/sso
+      - ./auth:/var/www/auth
+      - ./master:/var/www/master
+      - ./mk:/var/www/mk
+      - ./kuliah:/var/www/kuliah
+      - ./perkuliahan:/var/www/perkuliahan
+      - ./nilai:/var/www/nilai
+      - ./file:/var/www/file
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+      - ./logs/nginx:/var/log/nginx/
+    networks:
+      - siakad-cloud
+
+networks:
+  siakad-cloud:
+    driver: bridge

@@ -1,0 +1,51 @@
+version: '3.3'
+services:
+  sso:
+    build:
+      context: ./sso
+      dockerfile: Dockerfile
+    ports:
+      - 9001:9001
+    command: php -S 0.0.0.0:9001 -t public
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    ports:
+      - 9002:9002
+    command: php -S 0.0.0.0:9002 -t public
+  master:
+    build:
+      context: ./master
+      dockerfile: Dockerfile
+    ports:
+      - 9003:9003
+    command: php -S 0.0.0.0:9003 -t public
+  mk:
+    build:
+      context: ./mk
+      dockerfile: Dockerfile
+    ports:
+      - 9004:9004
+    command: php -S 0.0.0.0:9004 -t public
+  kuliah:
+    build:
+      context: ./kuliah
+      dockerfile: Dockerfile
+    ports:
+      - 9005:9005
+    command: php -S 0.0.0.0:9005 -t public
+  perkuliahan:
+    build:
+      context: ./perkuliahan
+      dockerfile: Dockerfile
+    ports:
+      - 9006:9006
+    command: php -S 0.0.0.0:9006 -t public
+  nilai:
+    build:
+      context: ./nilai
+      dockerfile: Dockerfile
+    ports:
+      - 9007:9007
+    command: php -S 0.0.0.0:9007 -t public

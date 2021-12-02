@@ -1,0 +1,94 @@
+version: '3.4'
+
+x-environment: &localvar
+  HOST_IP: "192.168.4.134"
+
+services:
+  sso:
+    build:
+      context: ./sso
+      dockerfile: Dockerfile
+    ports:
+      - 9001:9001
+    volumes:
+      - ./sso:/sso
+    container_name: sso_try
+    environment: *localvar
+    command: bash -c "cd /sso && cp .env.prod .env && composer install && php artisan migrate && php -S 0.0.0.0:9001 -t public"
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    ports:
+      - 9002:9002
+    volumes:
+      - ./auth:/auth
+    container_name: auth_try
+    environment: *localvar
+    command: bash -c "cd /auth && cp .env.prod .env && composer install && php artisan migrate && php -S 0.0.0.0:9002 -t public"
+  master:
+    build:
+      context: ./master
+      dockerfile: Dockerfile
+    ports:
+      - 9003:9003
+    volumes:
+      - ./master:/master
+    container_name: master_try
+    environment: *localvar
+    command: bash -c "cd /master && cp .env.prod .env && composer install && php artisan migrate && php -S 0.0.0.0:9003 -t public"
+  mk:
+    build:
+      context: ./mk
+      dockerfile: Dockerfile
+    ports:
+      - 9004:9004
+    volumes:
+      - ./mk:/mk
+    container_name: mk_try
+    environment: *localvar
+    command: bash -c "cd /mk && cp .env.prod .env && composer install && php artisan migrate && php -S 0.0.0.0:9004 -t public"
+  kuliah:
+    build:
+      context: ./kuliah
+      dockerfile: Dockerfile
+    ports:
+      - 9005:9005
+    volumes:
+      - ./kuliah:/kuliah
+    container_name: kuliah_try
+    environment: *localvar
+    command: bash -c "cd /kuliah && cp .env.prod .env && composer install && php artisan migrate && php -S 0.0.0.0:9005 -t public"
+  perkuliahan:
+    build:
+      context: ./perkuliahan
+      dockerfile: Dockerfile
+    ports:
+      - 9006:9006
+    volumes:
+      - ./perkuliahan:/perkuliahan
+    container_name: perkuliahan_try
+    environment: *localvar
+    command: bash -c "cd /perkuliahan && cp .env.prod .env && composer install && php artisan migrate && php -S 0.0.0.0:9006 -t public"
+  nilai:
+    build:
+      context: ./nilai
+      dockerfile: Dockerfile
+    ports:
+      - 9007:9007
+    volumes:
+      - ./nilai:/nilai
+    container_name: nilai_try
+    environment: *localvar
+    command: bash -c "cd /nilai && cp .env.prod .env && composer install && php artisan migrate && php -S 0.0.0.0:9007 -t public"
+  file:
+    build:
+      context: ./file
+      dockerfile: Dockerfile
+    ports:
+      - 9008:9008
+    volumes:
+      - ./file:/file
+    container_name: file_try
+    environment: *localvar
+    command: bash -c "cd /file && cp .env.prod .env && composer install && php artisan migrate && php -S 0.0.0.0:9008 -t public"
